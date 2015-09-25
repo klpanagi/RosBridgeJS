@@ -43,21 +43,24 @@ function bridge(hostName, port)
   this.getParam = function(paramName, callback){
     var srvMsg = __SrvMsg.GetParam(paramName);
     controller__.appendSrv(srvMsg, function(data){
-      callback(data.values.value);
+      var response = (data == undefined) ? [''] : data.values.value;
+      callback(response);
     });
   };
 
   this.getServices = function(callback){
     var srvMsg = __SrvMsg.GetServices();
     controller__.appendSrv(srvMsg, function(data){
-      callback(data.values.services);
+      var response = ( ! data) ? [''] : data.values.services;
+      callback(response);
     });
   };
 
   this.getNodes = function(callback){
     var srvMsg = __SrvMsg.GetNodes();
     controller__.appendSrv(srvMsg, function(data){
-      callback(data.values.nodes);
+      var response = ( ! data ) ? [''] : data.values.nodes;
+      callback(response);
     });
   };
 

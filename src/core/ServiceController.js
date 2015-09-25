@@ -86,6 +86,7 @@ function ServiceController(args)
         }
         this.ws_.onclose = function(){
           console.log('Connection to rosbridge closed');
+          __this.ws_ = undefined;
         }
         this.ws_.onmessage = function(event){
           var response = JSON.parse(event.value);
@@ -123,6 +124,7 @@ ServiceController.prototype.appendSrv = function(msg, callback)
     console.log( "\033[0;31m" +
       Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
       );
+    callback(undefined);
     return;
   }
   this.addRequest(msg, callback);
