@@ -1,6 +1,6 @@
 /*!
- * @file SrvMsg.js
- * @brief Expose service message objects (srv/ dir).
+ * @file Nodes.js
+ * @brief ROS Nodes transport msg objects.
  */
 
 /**
@@ -32,36 +32,14 @@
  *
  */
 
-var Srv   = require( __dirname + '/../../srv/Srv.js' );
-var Nodes = require( __dirname + '/../../srv/Nodes.js' );
-var Param = require( __dirname + '/../../srv/Param.js' );
-var Topics= require( __dirname + '/../../srv/Topics.js' );
-
-
-var GetServices = function(id)  {
-  var msg = Srv.GetServices;
-  msg.id = id;
-  return msg;
-};
-
-var GetNodes = function()  {return Nodes.GetNodes;};
-
-var GetParamNames = function()  {return Param.GetParamNames;};
-
-var GetTopics = function()  {return Param.GetParamNames;};
-
-var GetParam = function(paramName){
-  var msg = Param.GetParam;
-  msg.args.name = paramName;
-  return msg;
+var GetTopics = {
+  op: 'call_service',
+  service: '/rosapi/topics',
+  args: {},  // Empty Srv msg
+  id: ''  // Id field to be added by the ServiceController.
 };
 
 
 module.exports = {
-  GetServices: GetServices,
-  GetNodes: GetNodes,
-  GetParam: GetParam,
-  GetParamNames: GetParamNames,
   GetTopics: GetTopics
-};
-
+}

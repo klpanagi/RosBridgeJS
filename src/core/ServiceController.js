@@ -45,6 +45,11 @@ function ServiceController(args)
   this.unqIdLength_ = 10;
   this.randStrGen_ = new RandomStringGenerator(this.unqIdLength_);
   var __this = this;
+  this.events_ = {
+    onopen: args.onopen || function(){},
+    onclose: args.onclose || function(){},
+    onerror: args.onerror || function(){}
+  }
 
 
   this.addRequest = function(msg, callback)
@@ -60,6 +65,7 @@ function ServiceController(args)
           Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
         );
         this.randStrGen_.removeCached(reqId.toString());
+        this.events_.onerror();
         return;
       }
     }
@@ -83,10 +89,12 @@ function ServiceController(args)
         this.ws_.onopen = function(){
           console.log('Connection to rosbridge established');
           __connected = true;
+          __this.events_.onopen();
         }
         this.ws_.onclose = function(){
           console.log('Connection to rosbridge closed');
           __this.ws_ = undefined;
+          __this.events_.onclose();
         }
         this.ws_.onmessage = function(event){
           var response = JSON.parse(event.value);
@@ -101,6 +109,7 @@ function ServiceController(args)
         console.log( "\033[0;31m" +
           Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
           );
+        this.events_.onerror();
         //throw Exceptions.WebSocketError(this.hostName_, this.port_);
       }
     }
@@ -124,6 +133,7 @@ ServiceController.prototype.appendSrv = function(msg, callback)
     console.log( "\033[0;31m" +
       Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
       );
+    this.events_.onerror();
     callback(undefined);
     return;
   }
