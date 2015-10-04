@@ -37,10 +37,11 @@ function Rosbridge(hostName, port)
   this.port_ = port
   var bridge_ = require( __dirname + '/core/bridge.js' );
   this.rosbridge_ = undefined;
+  var reconnect__ = true;
 
   this.connect__ = function( hostName, port ){
     this.rosbridge_ = undefined;
-    this.rosbridge_ = new bridge_(hostName, port);
+    this.rosbridge_ = new bridge_(hostName, port, reconnect__ );
   }
 
   this.connect__(hostName, port);

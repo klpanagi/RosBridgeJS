@@ -6,7 +6,7 @@ var timeout = 1000;
 
 (function loop(){
   setTimeout( function(){
-    ros.getNodes(function(data){
+    ros.getTopics(function(data){
       console.log(data);
     });
     loop();

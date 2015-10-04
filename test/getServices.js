@@ -1,8 +1,14 @@
 
 var ROS = require( __dirname + '/../src/Rosbridge.js');
 var ros = new ROS('','');
+var timeout = 1000;
 
-var param = 'rosversion';
-ros.getServices(function(data){
-  console.log(data);
-})
+
+(function loop(){
+  setTimeout( function(){
+    ros.getServices(function(data){
+      console.log(data);
+    });
+    loop();
+  }, timeout);
+})()

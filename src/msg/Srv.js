@@ -39,7 +39,14 @@ var GetServices = {
   id: '' // Id field to be added by the ServiceController.
 }
 
+var CallService = {
+  op: 'call_service',
+  service: '',
+  args: {},
+  id: ''
+}
 
 module.exports = {
-  GetServices: GetServices
+  GetServices: GetServices,
+  CallService: CallService
 }

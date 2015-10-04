@@ -32,23 +32,19 @@
  *
  */
 
-var Srv   = require( __dirname + '/../../srv/Srv.js' );
-var Nodes = require( __dirname + '/../../srv/Nodes.js' );
-var Param = require( __dirname + '/../../srv/Param.js' );
-var Topics= require( __dirname + '/../../srv/Topics.js' );
+var Srv   = require( __dirname + '/../msg/Srv.js' );
+var Nodes = require( __dirname + '/../msg/Nodes.js' );
+var Param = require( __dirname + '/../msg/Param.js' );
+var Topics= require( __dirname + '/../msg/Topics.js' );
 
 
-var GetServices = function(id)  {
-  var msg = Srv.GetServices;
-  msg.id = id;
-  return msg;
-};
+var GetServices = function()  { return Srv.GetServices; }
 
-var GetNodes = function()  {return Nodes.GetNodes;};
+var GetNodes = function()  { return Nodes.GetNodes; }
 
-var GetParamNames = function()  {return Param.GetParamNames;};
+var GetParamNames = function()  { return Param.GetParamNames; }
 
-var GetTopics = function()  {return Param.GetParamNames;};
+var GetTopics = function()  { return Param.GetParamNames; }
 
 var GetParam = function(paramName){
   var msg = Param.GetParam;
@@ -56,12 +52,19 @@ var GetParam = function(paramName){
   return msg;
 };
 
+var CallSrv = function(srvName, args){
+  var msg = Srv.CallService;
+  msg.service = srvName;
+  msg.args = args;
+  return msg;
+}
 
 module.exports = {
-  GetServices: GetServices,
-  GetNodes: GetNodes,
-  GetParam: GetParam,
-  GetParamNames: GetParamNames,
-  GetTopics: GetTopics
+  GetServices   : GetServices,
+  GetNodes      : GetNodes,
+  GetParam      : GetParam,
+  GetParamNames : GetParamNames,
+  GetTopics     : GetTopics,
+  CallSrv       : CallSrv
 };
 

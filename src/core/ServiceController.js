@@ -39,8 +39,8 @@ var Exceptions = require( __dirname + '/Exceptions.js' );
 
 function ServiceController(args)
 {
-  this.hostName_ = args.hostName || 'localhost';
-  this.port_ = args.port || '9090';
+  this.hostName_ = args.hostName;
+  this.port_ = args.port;
   this.requests_ = {};
   this.unqIdLength_ = 10;
   this.randStrGen_ = new RandomStringGenerator(this.unqIdLength_);
@@ -58,6 +58,7 @@ function ServiceController(args)
     msg.id = reqId;
     if( this.requests_[ reqId.toString() ] === undefined && this.ws_ )
     {
+
       try{  this.ws_.send(JSON.stringify(msg)); }
       catch(e){
         //throw Exceptions.WebSocketError(this.hostName_, this.port_);
@@ -104,40 +105,44 @@ function ServiceController(args)
             __this.clearRequest(response.id);
           }
         }
+        this.ws_.onerror = function(e){
+          console.log( "\033[0;31m" +
+            Exceptions.WebSocketError(__this.hostName_, __this.port_) + "\033[0m"
+            );
+          __this.events_.onerror();
+          __this.ws_.close();
+          __this.ws_ = undefined;
+        }
       }
       catch(e){
         console.log( "\033[0;31m" +
           Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
           );
         this.events_.onerror();
-        //throw Exceptions.WebSocketError(this.hostName_, this.port_);
       }
     }
   }
   this.connect(this.hostName_, this.port_);
-}
 
-/**!
- * @brief Retrieve requested parameter value from ROS Parameter Server
- * @TODO
- */
-ServiceController.prototype.appendSrv = function(msg, callback)
-{
-  if (!callback)
+
+  this.registerService = function(msg, callback)
   {
-    console.log("Invoke this method with a valid callback function.");
-    return;
+    if (!callback)
+    {
+      console.log("Invoke this method with a valid callback function.");
+      return;
+    }
+    if( !this.ws_ ){
+      // Assign the callback to this request.
+      console.log( "\033[0;31m" +
+        Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m");
+      this.events_.onerror();
+      callback(undefined);
+      return;
+    }
+    this.addRequest(msg, callback);
   }
-  if( !this.ws_ ){
-    // Assign the callback to this request.
-    console.log( "\033[0;31m" +
-      Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
-      );
-    this.events_.onerror();
-    callback(undefined);
-    return;
-  }
-  this.addRequest(msg, callback);
+
 }
 
 
