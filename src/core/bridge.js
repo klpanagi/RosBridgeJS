@@ -33,40 +33,54 @@ function bridge(hostName, port, reconnect)
   this.getParam = function( paramName, callback ){
     var srvMsg = __SrvMsg.GetParam(paramName);
     controller__.registerService(srvMsg, function(data){
-      var response = ( ! data ) ? [] : data.values.value;
-      callback(response);
+      if( ! data ) { return }
+      if( data.result ) { callback(data.values.value) }
+      else{ console.log('\033[1;31mERROR: [%s]\033[0m',
+        data.values) }
     });
   };
 
   this.getServices = function( callback ){
     var srvMsg = __SrvMsg.GetServices();
     controller__.registerService(srvMsg, function(data){
-      var response = ( ! data) ? [] : data.values.services;
-      callback(response);
+      if( ! data ) { return }
+      if( data.result ) { callback(data.values.services) }
+      // Catch rosbridge_websocket_server error messages
+      else{ console.log('\033[1;31mERROR: [%s]\033[0m',
+        data.values) }
     });
   };
 
   this.getNodes = function( callback ){
     var srvMsg = __SrvMsg.GetNodes();
     controller__.registerService(srvMsg, function(data){
-      var response = ( ! data ) ? [] : data.values.nodes;
-      callback(response);
+      if( ! data ) { return }
+      if( data.result ) { callback(data.values.nodes) }
+      // Catch rosbridge_websocket_server error messages
+      else{ console.log('\033[1;31mERROR: [%s]\033[0m',
+        data.values) }
     });
   };
 
   this.getTopics = function( callback ){
     var srvMsg = __SrvMsg.GetTopics();
     controller__.registerService(srvMsg, function(data){
-      var response = ( ! data ) ? [] : data.values.names;
-      callback(response);
+      if( ! data ) { return }
+      if( data.result ) { callback(data.values.names) }
+      // Catch rosbridge_websocket_server error messages
+      else{ console.log('\033[1;31mERROR: [%s]\033[0m',
+        data.values) }
     });
   };
 
   this.callSrv = function( srvName, args, callback ){
     var srvMsg = __SrvMsg.CallSrv(srvName, args);
     controller__.registerService(srvMsg, function(data){
-      var response = ( ! data ) ? [] : data.values;
-      callback(response);
+      if( ! data ) { return }
+      if( data.result ) { callback(data.values) }
+      // Catch rosbridge_websocket_server error messages
+      else{ console.log('\033[1;31mERROR: [%s]\033[0m',
+        data.values) }
     });
   }
 
@@ -76,7 +90,7 @@ function bridge(hostName, port, reconnect)
     controller__.connect(hostName, port);
   }
 
-  this.connected = function()
+  this.isActive = function()
     {return active__;}
 
   var __loop = function(){

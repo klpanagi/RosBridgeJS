@@ -137,7 +137,6 @@ function ServiceController(args)
       console.log( "\033[0;31m" +
         Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m");
       this.events_.onerror();
-      callback(undefined);
       return;
     }
     this.addRequest(msg, callback);

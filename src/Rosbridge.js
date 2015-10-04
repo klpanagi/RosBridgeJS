@@ -63,7 +63,10 @@ Rosbridge.prototype.connect = function( hostName, port )
   {this.connect__(hostName, port)}
 
 Rosbridge.prototype.connected = function()
-  {return this.rosbridge_.connected()}
+  {return this.rosbridge_.isActive()}
+
+Rosbridge.prototype.callService = function( srvName, args, callback )
+  {this.rosbridge_.callSrv(srvName, args, callback)}
 
 
 module.exports = Rosbridge;
