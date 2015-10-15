@@ -68,5 +68,8 @@ Rosbridge.prototype.connected = function()
 Rosbridge.prototype.callService = function( srvName, args, callback )
   {this.rosbridge_.callSrv(srvName, args, callback)}
 
+Rosbridge.prototype.closeConnection = function()
+  {this.rosbridge_.disconnect()}
+
 
 module.exports = Rosbridge;

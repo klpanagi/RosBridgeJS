@@ -84,6 +84,10 @@ function bridge(hostName, port, reconnect)
     });
   }
 
+  this.disconnect = function(){
+    controller__.disconnect();
+  }
+
   var __reconnectController = function(hostName, port){
     console.log('Connecting bridge, {host: %s, port: %s}', hostname__,
       port__);

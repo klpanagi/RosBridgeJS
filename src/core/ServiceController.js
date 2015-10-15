@@ -125,6 +125,11 @@ function ServiceController(args)
   this.connect(this.hostName_, this.port_);
 
 
+  this.disconnect = function(){
+    this.ws_.close();
+    this.ws_ = undefined;
+  }
+
   this.registerService = function(msg, callback)
   {
     if (!callback)
