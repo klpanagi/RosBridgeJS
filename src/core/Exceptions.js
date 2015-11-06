@@ -1,7 +1,7 @@
 /*!
  *
- * @file rosParamClient.js
- * @brief Middleware to retrieve parameters from ROS Parameter Server.
+ * @file Exceptions.js
+ * @brief Custom Error Exception container classes.
  */
 
 /**
@@ -33,14 +33,27 @@
  *
  */
 
-var WebSocketError = function (hostname, port){
-  var error = "Rosbridge Websocket interface is broken." +
-    "Check given rosbridge-websocket-server parameters:\n" +
-    "--localhost{" +  hostname.toString() + "}, port{" + port.toString() +
-    "}";
-  return error;
+var util = require('util');
+
+function WSError(settings){
+  settings = ( settings || {} );
+
+  // Capture the current stacktrace and store it in the property "this.stack"
+  Error.captureStackTrace(this, this.constructor);
+
+  // Override the default name property (Error). This is basically zero value-add.
+  this.name = this.constructor.name;
+
+  var error = "WebSocket exception error";
+  this.message = (settings.message || error);
+  this.details = ( settings.details || '' );
+  this.errorCode = ( settings.errorCode || '' );
+  this.extendedInfo = ( settings.extendedInfo || '' );
+  this.isWebSocketError = true;
 }
 
+util.inherits( WSError, Error );
+
 module.exports = {
-  WebSocketError: WebSocketError
+  WSError: WSError
 }
