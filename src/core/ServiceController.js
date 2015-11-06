@@ -36,10 +36,15 @@
 var RandomStringGenerator = require( __dirname + '/../utils/randStrGen.js' );
 var Exceptions = require( __dirname + '/Exceptions.js' );
 
+var colors = {
+  error:    '\033[1;31m',
+  success:  '\033[1;32m',
+  clear:    '\033[0m'
+}
 
 function ServiceController(args)
 {
-  this.hostName_ = args.hostName;
+  this.hostname_ = args.hostname;
   this.port_ = args.port;
   this.requests_ = {};
   this.unqIdLength_ = 10;
@@ -58,19 +63,15 @@ function ServiceController(args)
     msg.id = reqId;
     if( this.requests_[ reqId.toString() ] === undefined && this.ws_ )
     {
-
+      this.requests_[reqId.toString()] = callback;
       try{  this.ws_.send(JSON.stringify(msg)); }
       catch(e){
-        //throw Exceptions.WebSocketError(this.hostName_, this.port_);
-        console.log( "\033[0;31m" +
-          Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
-        );
         this.randStrGen_.removeCached(reqId.toString());
         this.events_.onerror();
-        return;
+        this.clearRequest(reqId);
+        return false;
       }
     }
-    this.requests_[reqId.toString()] = callback;
   }
 
   this.clearRequest = function(reqId)
@@ -85,44 +86,39 @@ function ServiceController(args)
   {
     if( this.ws_ == undefined )
     {
-      try{
-        this.ws_ = new WebSocket('ws://' + this.hostName_ + ':' + this.port_);
-        this.ws_.onopen = function(){
-          console.log('Connection to rosbridge established');
-          __connected = true;
-          __this.events_.onopen();
-        }
-        this.ws_.onclose = function(){
-          console.log('Connection to rosbridge closed');
-          __this.ws_ = undefined;
-          __this.events_.onclose();
-        }
-        this.ws_.onmessage = function(event){
-          var response = JSON.parse(event.value);
-          if (__this.requests_[response.id] != undefined)
-          {
-            __this.requests_[response.id](response);
-            __this.clearRequest(response.id);
-          }
-        }
-        this.ws_.onerror = function(e){
-          console.log( "\033[0;31m" +
-            Exceptions.WebSocketError(__this.hostName_, __this.port_) + "\033[0m"
-            );
-          __this.events_.onerror();
-          __this.ws_.close();
-          __this.ws_ = undefined;
+      this.ws_ = new WebSocket('ws://' + this.hostname_ + ':' + this.port_);
+      this.ws_.onopen = function(){
+        console.log('Connection to rosbridge established');
+        __connected = true;
+        __this.events_.onopen();
+      }
+      this.ws_.onclose = function(){
+        console.log('Connection to rosbridge closed');
+        __this.ws_ = undefined;
+        __this.events_.onclose();
+      }
+      this.ws_.onmessage = function(event){
+        var response = JSON.parse(event.value);
+        if (__this.requests_[response.id] != undefined)
+        {
+          __this.requests_[response.id](response);
+          __this.clearRequest(response.id);
         }
       }
-      catch(e){
-        console.log( "\033[0;31m" +
-          Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m"
-          );
-        this.events_.onerror();
+      this.ws_.onerror = function(e){
+        var errorMsg = "Rosbridge Websocket interface is broken. " +
+          " [ws://" +  __this.hostname_ + ":" +
+          __this.port_.toString() + "]";
+        console.log(colors.error + '[Rosbridge]: ' + errorMsg +
+          colors.clear);
+        //console.log(e)
+        __this.events_.onerror();
+        __this.ws_.close();
+        __this.ws_ = undefined;
       }
     }
   }
-  this.connect(this.hostName_, this.port_);
+  this.connect(this.hostname_, this.port_);
 
 
   this.disconnect = function(){
@@ -135,16 +131,15 @@ function ServiceController(args)
     if (!callback)
     {
       console.log("Invoke this method with a valid callback function.");
-      return;
+      return false;
     }
     if( !this.ws_ ){
       // Assign the callback to this request.
-      console.log( "\033[0;31m" +
-        Exceptions.WebSocketError(this.hostName_, this.port_) + "\033[0m");
       this.events_.onerror();
-      return;
+      return false;
     }
-    this.addRequest(msg, callback);
+    if( this.addRequest(msg, callback) ) { return true }
+    else { return true }
   }
 
 }
