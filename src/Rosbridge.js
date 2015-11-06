@@ -31,43 +31,111 @@
  *
  */
 
-function Rosbridge(hostName, port)
+
+/*!
+ *  @brief Global scope Rosbridge class.
+ *
+ *  Used in order to communicate with ROS-framework through rosbridge
+ *  websocket server.
+ *  For more information on Rosbridge-Websocket-Server visit:
+ *  http://wiki.ros.org/rosbridge_suite
+ *
+ */
+function Rosbridge(options)
 {
-  this.hostName_ = hostName;
-  this.port_ = port
+  options = ( options || {} );
+  if( options.reconnect != undefined ){
+    reconnect__ = options.reconnect;
+  }
+
   var bridge_ = require( __dirname + '/core/bridge.js' );
   this.rosbridge_ = undefined;
   var reconnect__ = true;
 
-  this.connect__ = function( hostName, port ){
+  this.connect__ = function(options){
     this.rosbridge_ = undefined;
-    this.rosbridge_ = new bridge_(hostName, port, reconnect__ );
+    this.rosbridge_ = new bridge_(options);
   }
 
-  this.connect__(hostName, port);
+  this.connect__(options);
 }
 
+
+/*!
+ *  @brief Get parameter from ROS-Parameter-Server. Service call.
+ *
+ *  @param paramName Name of the parameter to retrieve from ROS
+ *    parameter server.
+ *
+ *  @param callback Callback to execute on asynchronous response.
+ */
 Rosbridge.prototype.getParam = function( paramName, callback )
   {this.rosbridge_.getParam(paramName, callback)}
 
+
+/*!
+ *  @brief Get list of available ROS-Services.
+ *
+ *  @param callback Callback to execute on asynchronous response.
+ */
 Rosbridge.prototype.getServices = function( callback )
   {this.rosbridge_.getServices(callback)}
 
+
+/*!
+ *  @brief Get list of running ROS-Nodes.
+ *
+ *  @param callback Callback to execute on asynchronous response.
+ */
 Rosbridge.prototype.getNodes = function( callback )
   {this.rosbridge_.getNodes(callback)}
 
+
+/*!
+ *  @brief Get list of available ROS-Topics.
+ *
+ *  @param callback Callback to execute on asynchronous response.
+ */
 Rosbridge.prototype.getTopics = function( callback )
   {this.rosbridge_.getTopics(callback)}
 
-Rosbridge.prototype.connect = function( hostName, port )
-  {this.connect__(hostName, port)}
 
-Rosbridge.prototype.connected = function()
+/*!
+ *  @brief On demand connect to rosbridge websocket server.
+ *
+ *  @param options Connection options(settings) literal.
+ *    { hostname: '', port: '', reconnect: false,
+ *      onconnection: function(),
+ *      onclose: function(),
+ *      onerror: function()
+ *    }
+ */
+Rosbridge.prototype.connect = function(options)
+  {this.connect__(options)}
+
+
+/*!
+ *  @brief Return true if connection to rosbridge is established.
+ */
+Rosbridge.prototype.isConnected = function()
   {return this.rosbridge_.isActive()}
 
-Rosbridge.prototype.callService = function( srvName, args, callback )
+
+/*!
+ *  @brief Call a ROS-Service. Service request.
+ *
+ *  @param srvName ROS-Service name to call.
+ *  @param args ROS-Service request arguments.
+ *  @callback Callback function to execute on response from service
+ *    request call.
+ */
+Rosbridge.prototype.callService = function( srvName, args, callback)
   {this.rosbridge_.callSrv(srvName, args, callback)}
 
+
+/*!
+ *  @brief Close/Terminate this connection to rosbridge websocket server.
+ */
 Rosbridge.prototype.closeConnection = function()
   {this.rosbridge_.disconnect()}
 
