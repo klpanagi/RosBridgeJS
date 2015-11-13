@@ -129,8 +129,8 @@ Rosbridge.prototype.isConnected = function()
  *  @callback Callback function to execute on response from service
  *    request call.
  */
-Rosbridge.prototype.callService = function( srvName, args, callback)
-  {this.rosbridge_.callSrv(srvName, args, callback)}
+Rosbridge.prototype.callService = function( srvName, args, options)
+  {this.rosbridge_.callSrv(srvName, args, options)}
 
 
 /*!

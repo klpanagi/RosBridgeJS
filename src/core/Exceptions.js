@@ -41,10 +41,11 @@ function WSError(settings){
   // Capture the current stacktrace and store it in the property "this.stack"
   Error.captureStackTrace(this, this.constructor);
 
-  // Override the default name property (Error). This is basically zero value-add.
+  // Override the default name property (Error).
+  // This is basically zero value-add.
   this.name = this.constructor.name;
 
-  var error = "WebSocket exception error";
+  var error = "WebSocket error";
   this.message = (settings.message || error);
   this.details = ( settings.details || '' );
   this.errorCode = ( settings.errorCode || '' );
@@ -52,8 +53,31 @@ function WSError(settings){
   this.isWebSocketError = true;
 }
 
+
+function RosbridgeError(settings){
+  settings = ( settings || {} );
+
+  // Capture the current stacktrace and store it in the property "this.stack"
+  Error.captureStackTrace(this, this.constructor);
+
+  // Override the default name property (Error).
+  // This is basically zero value-add.
+  this.name = this.constructor.name;
+
+  var error = "Rosbridge error";
+  this.message = (settings.message || error);
+  this.details = ( settings.details || '' );
+  this.errorCode = ( settings.errorCode || '' );
+  this.extendedInfo = ( settings.extendedInfo || '' );
+  this.isWebSocketError = true;
+}
+
+
 util.inherits( WSError, Error );
+util.inherits( RosbridgeError, Error );
+
 
 module.exports = {
-  WSError: WSError
+  WSError: WSError,
+  RosbridgeError: RosbridgeError
 }

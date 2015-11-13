@@ -101,6 +101,7 @@ function ServiceController(args)
         var response = JSON.parse(event.value);
         if (__this.requests_[response.id] != undefined)
         {
+          //console.log(response)
           __this.requests_[response.id](response);
           __this.clearRequest(response.id);
         }
