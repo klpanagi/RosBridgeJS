@@ -39,17 +39,17 @@ function bridge(options)
     onopen: function(){
       active__ = true;
       // If onconnection callback has been defined on initiation, execute
-      if (options.onconnection) { options.onconnection() }
+      if (options.onconnection) { options.onconnection(); }
     },
     onclose: function(){
       active__ = false;
       // If onclose callback has been defined on initiation, execute
-      if (options.onclose) { options.onclose() }
+      if (options.onclose) { options.onclose(); }
     },
     onerror: function(){
       active__ = false;
       // If onerror callback has been defined on initiation, execute
-      if (options.onerror) { options.onerror() }
+      if (options.onerror) { options.onerror(); }
     }
   });
 
@@ -57,7 +57,8 @@ function bridge(options)
   this.getParam = function( paramName, callback ){
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
-      var errMsg = 'Rosbridge connection is not active...';
+      var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
+        'Rosbridge connection is not active...';
       console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
       /*
       var excSettings = {
@@ -68,13 +69,13 @@ function bridge(options)
       }
       throw new WSError(excSettings);
       */
-      if ( options.fail ) { options.fail(errMsg) }
+      if ( options.fail ) { options.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetParam(paramName);
     controller__.registerService(srvMsg, function(data){
-      if( ! data ) { return }
-      if( data.result ) { callback(data.values.value) }
+      if( ! data ) { return; }
+      if( data.result ) { callback(data.values.value); }
       else{
         var errMsg = data.values.toString();
         console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
@@ -86,7 +87,8 @@ function bridge(options)
   this.getServices = function( callback ){
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
-      var errMsg = 'Rosbridge connection is not active...';
+      var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
+        'Rosbridge connection is not active...';
       console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
       /*
       var excSettings = {
@@ -97,13 +99,13 @@ function bridge(options)
       }
       throw new WSError(excSettings);
       */
-      if ( options.fail ) { options.fail(errMsg) }
+      if ( options.fail ) { options.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetServices();
     controller__.registerService(srvMsg, function(data){
-      if( ! data ) { return }
-      if( data.result ) { callback(data.values.services) }
+      if( ! data ) { return; }
+      if( data.result ) { callback(data.values.services); }
       // Catch rosbridge_websocket_server error messages
       else{
         var errMsg = data.values.toString();
@@ -116,7 +118,8 @@ function bridge(options)
   this.getNodes = function( callback ){
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
-      var errMsg = 'Rosbridge connection is not active...';
+      var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
+        'Rosbridge connection is not active...';
       console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
       /*
       var excSettings = {
@@ -127,13 +130,13 @@ function bridge(options)
       }
       throw new WSError(excSettings);
       */
-      if ( options.fail ) { options.fail(errMsg) }
+      if ( options.fail ) { options.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetNodes();
     controller__.registerService(srvMsg, function(data){
-      if( ! data ) { return }
-      if( data.result ) { callback(data.values.nodes) }
+      if( ! data ) { return; }
+      if( data.result ) { callback(data.values.nodes); }
       // Catch rosbridge_websocket_server error messages
       else{
         var errMsg = data.values.toString();
@@ -146,7 +149,8 @@ function bridge(options)
   this.getTopics = function( callback ){
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
-      var errMsg = 'Rosbridge connection is not active...';
+      var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
+        'Rosbridge connection is not active...';
       console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
       /*
       var excSettings = {
@@ -157,13 +161,13 @@ function bridge(options)
       }
       throw new WSError(excSettings);
       */
-      if ( options.fail ) { options.fail(errMsg) }
+      if ( options.fail ) { options.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetTopics();
     controller__.registerService(srvMsg, function(data){
-      if( ! data ) { return }
-      if( data.result ) { callback(data.values.names) }
+      if( ! data ) { return; }
+      if( data.result ) { callback(data.values.names); }
       // Catch rosbridge_websocket_server error messages
       else{
         var errMsg = data.values.toString();
@@ -177,7 +181,8 @@ function bridge(options)
     options = ( options || {} );
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
-      var errMsg = 'Rosbridge connection is not active...';
+      var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
+        'Rosbridge connection is not active...';
       console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
       /*
       var excSettings = {
@@ -188,41 +193,42 @@ function bridge(options)
       }
       throw new WSError(excSettings);
       */
-      if ( options.fail ) { options.fail(errMsg) }
+      if ( options.fail ) { options.fail(errMsg); }
       return false;
     }
     // If an active connection is present, push request to service
     // controller.
     var srvMsg = __SrvMsg.CallSrv(srvName, args);
     controller__.registerService(srvMsg, function(data){
-      if( ! data ) { return }
+      if( ! data ) { return; }
       if( data.result ) {
-        if( options.success ) { options.success(data.values) }
+        if( options.success ) { options.success(data.values); }
       }
       // Catch rosbridge_websocket_server error messages
       else{
         var errMsg = data.values.toString();
         console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-        if( options.fail ) { options.fail(errMsg) }
+        if( options.fail ) { options.fail(errMsg); }
       }
     });
     return true;
-  }
+  };
 
 
   this.disconnect = function(){
     controller__.disconnect();
-  }
+  };
 
-  this.isActive = function()
-    {return active__;}
+  this.isActive = function(){
+    return active__;
+  };
 
 
   var __reconnectController = function(hostname, port){
     console.log('Connecting bridge, {host: %s, port: %s}', hostname__,
       port__);
     controller__.connect(hostname, port);
-  }
+  };
 
 
   var __loop = function(){
@@ -232,9 +238,9 @@ function bridge(options)
         __reconnectController(hostname__, port__);
       }
       __loop();
-    }, pollTimeout__)
-  }
-  if( reconnect__ ) {__loop()}
+    }, pollTimeout__);
+  };
+  if( reconnect__ ) { __loop(); }
 }
 
 module.exports = bridge;
