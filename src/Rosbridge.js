@@ -55,7 +55,7 @@ function Rosbridge(options)
   this.connect__ = function(options){
     this.rosbridge_ = undefined;
     this.rosbridge_ = new bridge_(options);
-  }
+  };
 
   this.connect__(options);
 }
@@ -69,8 +69,9 @@ function Rosbridge(options)
  *
  *  @param callback Callback to execute on asynchronous response.
  */
-Rosbridge.prototype.getParam = function( paramName, callback )
-  {this.rosbridge_.getParam(paramName, callback)}
+Rosbridge.prototype.getParam = function( paramName, callback, opts ){
+  this.rosbridge_.getParam(paramName, callback);
+};
 
 
 /*!
@@ -78,8 +79,9 @@ Rosbridge.prototype.getParam = function( paramName, callback )
  *
  *  @param callback Callback to execute on asynchronous response.
  */
-Rosbridge.prototype.getServices = function( callback )
-  {this.rosbridge_.getServices(callback)}
+Rosbridge.prototype.getServices = function( callback, opts ){
+  this.rosbridge_.getServices(callback, opts);
+};
 
 
 /*!
@@ -87,8 +89,9 @@ Rosbridge.prototype.getServices = function( callback )
  *
  *  @param callback Callback to execute on asynchronous response.
  */
-Rosbridge.prototype.getNodes = function( callback )
-  {this.rosbridge_.getNodes(callback)}
+Rosbridge.prototype.getNodes = function( callback, opts ){
+  this.rosbridge_.getNodes(callback, opts);
+};
 
 
 /*!
@@ -96,8 +99,9 @@ Rosbridge.prototype.getNodes = function( callback )
  *
  *  @param callback Callback to execute on asynchronous response.
  */
-Rosbridge.prototype.getTopics = function( callback )
-  {this.rosbridge_.getTopics(callback)}
+Rosbridge.prototype.getTopics = function( callback, opts ){
+  this.rosbridge_.getTopics(callback, opts);
+};
 
 
 /*!
@@ -110,15 +114,17 @@ Rosbridge.prototype.getTopics = function( callback )
  *      onerror: function()
  *    }
  */
-Rosbridge.prototype.connect = function(options)
-  {this.connect__(options)}
+Rosbridge.prototype.connect = function(options){
+  this.connect__(options);
+};
 
 
 /*!
  *  @brief Return true if connection to rosbridge is established.
  */
-Rosbridge.prototype.isConnected = function()
-  {return this.rosbridge_.isActive()}
+Rosbridge.prototype.isConnected = function(){
+  return this.rosbridge_.isActive();
+};
 
 
 /*!
@@ -129,15 +135,17 @@ Rosbridge.prototype.isConnected = function()
  *  @callback Callback function to execute on response from service
  *    request call.
  */
-Rosbridge.prototype.callService = function( srvName, args, options)
-  {this.rosbridge_.callSrv(srvName, args, options)}
+Rosbridge.prototype.callService = function( srvName, args, options){
+  this.rosbridge_.callSrv(srvName, args, options);
+};
 
 
 /*!
  *  @brief Close/Terminate this connection to rosbridge websocket server.
  */
-Rosbridge.prototype.closeConnection = function()
-  {this.rosbridge_.disconnect()}
+Rosbridge.prototype.closeConnection = function(){
+  this.rosbridge_.disconnect();
+};
 
 
 module.exports = Rosbridge;

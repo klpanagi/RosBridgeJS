@@ -54,22 +54,15 @@ function bridge(options)
   });
 
 
-  this.getParam = function( paramName, callback ){
+  this.getParam = function( paramName, callback, opts ){
+    opts = opts || {};
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
       var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
         'Rosbridge connection is not active...';
-      console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-      /*
-      var excSettings = {
-        details: errMsg,
-        extendedInfo:
-          util.format('Check given rosbridge ws end-point parameters ' +
-          '[ws://%s:%s]', hostname__, port__.toString())
-      }
-      throw new WSError(excSettings);
-      */
-      if ( options.fail ) { options.fail(errMsg); }
+      //console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
+
+      if ( opts.fail ) { opts.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetParam(paramName);
@@ -84,22 +77,15 @@ function bridge(options)
   };
 
 
-  this.getServices = function( callback ){
+  this.getServices = function( callback, opts ){
+    opts = opts || {};
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
       var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
         'Rosbridge connection is not active...';
-      console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-      /*
-      var excSettings = {
-        details: errMsg,
-        extendedInfo:
-          util.format('Check given rosbridge ws end-point parameters ' +
-          '[ws://%s:%s]', hostname__, port__.toString())
-      }
-      throw new WSError(excSettings);
-      */
-      if ( options.fail ) { options.fail(errMsg); }
+      //console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
+
+      if ( opts.fail ) { opts.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetServices();
@@ -115,22 +101,15 @@ function bridge(options)
   };
 
 
-  this.getNodes = function( callback ){
+  this.getNodes = function( callback, opts ){
+    opts = opts || {};
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
       var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
         'Rosbridge connection is not active...';
-      console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-      /*
-      var excSettings = {
-        details: errMsg,
-        extendedInfo:
-          util.format('Check given rosbridge ws end-point parameters ' +
-          '[ws://%s:%s]', hostname__, port__.toString())
-      }
-      throw new WSError(excSettings);
-      */
-      if ( options.fail ) { options.fail(errMsg); }
+      //console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
+
+      if ( opts.fail ) { opts.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetNodes();
@@ -146,22 +125,15 @@ function bridge(options)
   };
 
 
-  this.getTopics = function( callback ){
+  this.getTopics = function( callback, opts ){
+    opts = opts || {};
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
       var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
         'Rosbridge connection is not active...';
-      console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-      /*
-      var excSettings = {
-        details: errMsg,
-        extendedInfo:
-          util.format('Check given rosbridge ws end-point parameters ' +
-          '[ws://%s:%s]', hostname__, port__.toString())
-      }
-      throw new WSError(excSettings);
-      */
-      if ( options.fail ) { options.fail(errMsg); }
+      //console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
+
+      if ( opts.fail ) { opts.fail(errMsg); }
       return false;
     }
     var srvMsg = __SrvMsg.GetTopics();
@@ -177,23 +149,15 @@ function bridge(options)
   };
 
 
-  this.callSrv = function( srvName, args, options ){
-    options = ( options || {} );
+  this.callSrv = function( srvName, args, opts ){
+    opts = ( opts || {} );
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
       var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
         'Rosbridge connection is not active...';
-      console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-      /*
-      var excSettings = {
-        details: errMsg,
-        extendedInfo:
-          util.format('Check given rosbridge ws end-point parameters ' +
-          '[ws://%s:%s]', hostname__, port__.toString())
-      }
-      throw new WSError(excSettings);
-      */
-      if ( options.fail ) { options.fail(errMsg); }
+      //console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
+
+      if ( opts.fail ) { opts.fail(errMsg); }
       return false;
     }
     // If an active connection is present, push request to service
