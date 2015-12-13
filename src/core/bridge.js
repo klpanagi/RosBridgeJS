@@ -150,7 +150,7 @@ function bridge(options)
 
 
   this.callSrv = function( srvName, args, opts ){
-    opts = ( opts || {} );
+    opts = opts || {};
     // If rosbridge connection is not estalished, inform and return.
     if(! this.isActive()){
       var errMsg = '[Rosbridge]: Cannot call ros-service. ' +
@@ -166,13 +166,13 @@ function bridge(options)
     controller__.registerService(srvMsg, function(data){
       if( ! data ) { return; }
       if( data.result ) {
-        if( options.success ) { options.success(data.values); }
+        if( opts.success ) { opts.success(data.values); }
       }
       // Catch rosbridge_websocket_server error messages
       else{
         var errMsg = data.values.toString();
         console.log(colors.error + '[Rosbridge]: ' + errMsg + colors.clear);
-        if( options.fail ) { options.fail(errMsg); }
+        if( opts.fail ) { opts.fail(errMsg); }
       }
     });
     return true;
